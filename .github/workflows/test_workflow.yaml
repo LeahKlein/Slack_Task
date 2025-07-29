@@ -1,0 +1,24 @@
+name: 🧪Test
+on: 
+  push:
+    branches:
+      - feature_slack_lk
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:  
+    - name: 🔨 Check out repository
+      uses: actions/checkout@v4
+    - name: 📌 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    - name: ➕ Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+    - name: ✅ Run tests
+      run: python -m unittest discover
