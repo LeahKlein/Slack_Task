@@ -5,11 +5,9 @@ from slack_sdk.errors import SlackApiError
 
 load_dotenv()
 
-
 slack_token = os.getenv("MY_SLACK_TOKEN")
 channel = os.getenv("MY-CHANNEL")
 client = WebClient(token=slack_token)
-
 
 def post_message(message):
     try:
@@ -17,7 +15,6 @@ def post_message(message):
         return "Message sent successfully"
     except SlackApiError as e:
         raise ValueError(f"Error sending message: {e}") from e
-
 
 def channel_list():
     try:
@@ -28,14 +25,13 @@ def channel_list():
     except Exception as e:
         raise ValueError(e) from e
 
+def channel_exists(channel_name):
+    channels = channel_list()
+    return any(ch["name"] == channel_name for ch in channels)
 
 def add_channel_to_slack(channel_name):
-    channels = channel_list()
-    for ch in channels:
-        if ch["name"] == channel_name:
-            raise ValueError(
-                f"Channel {channel_name} already exists.")
-
+    if channel_exists(channel_name):
+        raise ValueError(f"Channel {channel_name} already exists.")
     try:
         response = client.conversations_create(name=channel_name)
         if response['ok']:
@@ -44,7 +40,6 @@ def add_channel_to_slack(channel_name):
             f"Error adding channel: {response['error']}")
     except SlackApiError as e:
         raise ValueError(e) from e
-
 
 def add_user_to_channel(channel_id, user_ids):
     try:
@@ -67,7 +62,6 @@ def add_user_to_channel(channel_id, user_ids):
                 f"Error getting channel members: {members_response['error']}")
     except SlackApiError as e:
         raise ValueError(e) from e
-
 
 def remove_user_from_channel(channel_id, user_id):
     try:

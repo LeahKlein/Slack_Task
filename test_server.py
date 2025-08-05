@@ -3,7 +3,6 @@ from unittest.mock import patch
 import server
 from slack_sdk.errors import SlackApiError
 
-
 class TestPostMessage(unittest.TestCase):
 
     @patch('server.client')
@@ -25,7 +24,6 @@ class TestPostMessage(unittest.TestCase):
         self.assertTrue(
             "Error sending message: error" in str(context.exception))
 
-
 class TestChannelList(unittest.TestCase):
 
     @patch('server.client')
@@ -41,7 +39,6 @@ class TestChannelList(unittest.TestCase):
         self.assertEqual(channels, expected_channels)
         mock_client.conversations_list.assert_called_once_with(
             types="public_channel,private_channel")
-
 
 class TestAddChannelToSlack(unittest.TestCase):
 
@@ -97,7 +94,6 @@ class TestAddChannelToSlack(unittest.TestCase):
         self.assertIn(
             "The server responded with: {'ok': False}", str(context.exception))
 
-
 class TestAddUserToChannel(unittest.TestCase):
 
     @patch('server.client')
@@ -146,7 +142,6 @@ class TestAddUserToChannel(unittest.TestCase):
             str(context.exception),
             "Error getting channel members: channel_not_found")
 
-
 class TestRemoveUserFromChannel(unittest.TestCase):
 
     @patch('server.client')
@@ -190,7 +185,6 @@ class TestRemoveUserFromChannel(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             server.remove_user_from_channel("C123456", "U654321")
         self.assertEqual(str(context.exception), "channel_not_found")
-
 
 if __name__ == '__main__':
     unittest.main()
